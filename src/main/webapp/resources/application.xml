@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<!--файл конфигурации -->
+<properties>
+<!--    активный профиль-->
+    <entry key="spring.profiles.active">prod</entry>
+<!-- Логгер  ERROR DEBUG -->
+    <entry key="logging.level.org.springframework.web">INFO</entry>
+    <entry key="logging.level.com.space">INFO</entry>
+
+
+
+    <entry key="logging.level.root">INFO</entry>
+    <!--    #создаст файл app.log по указанному пути-->
+    <!--    #logging.file=/Users/leon/app.log-->
+    <entry key="logging.file">cosmoport.log</entry>
+<!--    # Уровень логирования-->
+
+    <entry key="log4j.rootLogger">INFO, console</entry>
+
+<!--    #Аппендер для консоли-->
+    <entry key="log4j.appender.console">org.apache.log4j.ConsoleAppender</entry>
+    <entry key="log4j.appender.console.layout">org.apache.log4j.PatternLayout</entry>
+    <entry key="log4j.appender.console.layout.conversionPattern">%5p [%t] (%F:%L) - %m%n</entry>
+
+    <!--    <entry key="log4j.rootLogger">INFO, file</entry>-->
+<!--    # Апендер для работы с файлами-->
+    <entry key="log4j.appender.file">org.apache.log4j.RollingFileAppender</entry>
+<!--    # Путь где будет создаваться лог файл-->
+    <entry key="log4j.appender.file.File">./cosmoport.log</entry>
+<!--    # Указываем максимальный размер файла с логами-->
+    <entry key="log4j.appender.file.MaxFileSize">1MB</entry>
+<!--    # Конфигурируем шаблон вывода логов в файл-->
+    <entry key="log4j.appender.file.layout">org.apache.log4j.PatternLayout</entry>
+    <entry key="log4j.appender.file.layout.ConversionPattern">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</entry>
+
+
+
+    <entry key=""></entry>
+    <entry key=""></entry>
+    <entry key=""></entry>
+    <entry key=""></entry>
+    <entry key=""></entry>
+    <entry key=""></entry>
+
+</properties>
