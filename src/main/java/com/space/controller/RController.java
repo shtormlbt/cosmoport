@@ -451,6 +451,7 @@ public class RController {
             Iship.setPlanet(ship.getPlanet());
         }
 
+        
         if(ship.getShipType()!=null){
             Iship.setShipType(ship.getShipType());
         }
