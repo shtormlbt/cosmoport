@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.space.controller.utils.ShipInfoTest;
 import com.space.controller.utils.TestsHelper;
+import com.space.model.ShipOrder;
 import com.space.model.ShipType;
 import org.junit.Test;
 import org.springframework.http.MediaType;
