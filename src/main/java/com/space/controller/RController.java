@@ -9,18 +9,11 @@ import com.space.util.InternalUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -39,94 +32,283 @@ public class RController {
      * @return
      */
 
+//    @RequestMapping(value = "/rest/ships",method = RequestMethod.GET)
+//    public List<Ship> getShips(String name, String planet, ShipType shipType, Long after, Long before, Boolean isUsed, Double minSpeed,
+//                               Double maxSpeed, Integer minCrewSize, Integer maxCrewSize, Double minRating, Double maxRating, ShipOrder order,
+//                               Integer pageNumber, Integer pageSize, HttpServletResponse response){
+//
+//        List<Ship> returnList = shipService.findAll();
+//
+//        if(order==null)order= ShipOrder.ID;
+//        if(pageNumber==null)pageNumber=0;
+//        if(pageSize==null)pageSize=3;
+//
+//        if(name!=null){
+//          returnList = returnList.stream().filter(x->x.getName().contains(name)).collect(Collectors.toList());
+//        }
+//        if(planet!=null){
+//            returnList = returnList.stream().filter(x->x.getPlanet().contains(planet)).collect(Collectors.toList());
+//        }
+//        if(shipType!=null){
+//            returnList = returnList.stream().filter(x->x.getShipType()==shipType).collect(Collectors.toList());
+//        }
+//        if(after!=null||before!=null) {
+//            if (after == null) {
+//
+//                returnList = returnList.stream().filter(x -> x.getProdDate().getTime()<=before).collect(Collectors.toList());
+//            } else if (before == null) {
+//
+//                final long afterF = after;
+//                returnList = returnList.stream().filter(x -> x.getProdDate().getTime()>=afterF).collect(Collectors.toList());
+//            } else {
+//                final long afterF = after;
+//                final long beforeF = before;
+//                returnList = returnList.stream().filter(x -> x.getProdDate().getTime()>=afterF && x.getProdDate().getTime()<=beforeF).collect(Collectors.toList());
+//
+//
+//            }
+//
+//        }
+//        if(isUsed!=null){
+//            if(isUsed){
+//                returnList = returnList.stream().filter(x->x.isUsed()).collect(Collectors.toList());
+//            }else {
+//                returnList = returnList.stream().filter(x->!x.isUsed()).collect(Collectors.toList());
+//            }
+//
+//        }
+//        if(minSpeed!=null){
+//            returnList = returnList.stream().filter(x->x.getSpeed()>=minSpeed).collect(Collectors.toList());
+//        }
+//        if(maxSpeed!=null){
+//            returnList = returnList.stream().filter(x->x.getSpeed()<=maxSpeed).collect(Collectors.toList());
+//        }
+//        if(minCrewSize!=null){
+//            returnList = returnList.stream().filter(x->x.getCrewSize()>=minCrewSize).collect(Collectors.toList());
+//        }
+//        if(maxCrewSize!=null){
+//            returnList = returnList.stream().filter(x->x.getCrewSize()<=maxCrewSize).collect(Collectors.toList());
+//        }
+//        if(minRating!=null){
+//            //returnList = returnList.stream().filter(x->x.getRating()>=minRating).collect(Collectors.toList());
+//            List<Ship> tmp = new ArrayList<>();
+//            for(Ship sh:returnList){
+//                BigDecimal rating = new BigDecimal(sh.getRating());
+//                BigDecimal minR = new BigDecimal(minRating);
+//                if(rating.compareTo(minR)>=0){
+//                    tmp.add(sh);
+//                }
+//                returnList = tmp;
+//            }
+//
+//        }
+//        if(maxRating!=null){
+//            List<Ship> tmp = new ArrayList<>();
+//            for(Ship sh:returnList){
+//                BigDecimal rating = new BigDecimal(sh.getRating());
+//                BigDecimal maxR = new BigDecimal(maxRating);
+//                if(rating.compareTo(maxR)<=0){
+//                    tmp.add(sh);
+//                }
+//            returnList = tmp;
+//            }
+//        }
+//
+//
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        return returnList;
+//    }
+
     @RequestMapping(value = "/rest/ships",method = RequestMethod.GET)
     public List<Ship> getShips(String name, String planet, ShipType shipType, Long after, Long before, Boolean isUsed, Double minSpeed,
                                Double maxSpeed, Integer minCrewSize, Integer maxCrewSize, Double minRating, Double maxRating, ShipOrder order,
                                Integer pageNumber, Integer pageSize, HttpServletResponse response){
-       List<Ship> returnList = new ArrayList<>();
-//        Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
-//        Pageable pageable = new PageRequest(pageNumber,pageSize,sort);
 
-       Boolean nameIsNull = true;
-       Boolean planetIsNull = true;
-       Boolean prodYearIsNull = true;
-       Boolean crewSizeIsNull = true;
-       Boolean maxSpeedIsNull = true;
-       Boolean ratingIsNull = true;
-       Boolean shipTypeIsNull = true;
-       Boolean isUsedIsNull = true;
+        List<Ship> returnList = new ArrayList<>();
+
+        if(order==null)order=ShipOrder.ID;
+        if(pageNumber==null)pageNumber=0;
+        pageNumber++;
+        if(pageSize==null)pageSize=3;
 
 
-       if(name!=null&&!name.equals("")){
-           nameIsNull = false;
-           returnList.addAll(shipService.findByName(name));
-       }
-       if(planet!=null&&!planet.equals("")){
-           planetIsNull = false;
-           returnList.addAll(shipService.findByPlanet(planet));
-       }
-       if(after!=null||before!=null){
-            if(after==null)after=0L;
-            if(before==null)before=0L;
-            prodYearIsNull = false;
-            Date minDate = new Date();
-            Date maxDate = new Date();
-            minDate.setTime(after);
-            maxDate.setTime(before);
-            returnList.addAll(shipService.findByProdDate(minDate,maxDate));
-       }
 
-        if(maxCrewSize!=null||minCrewSize!=null){
-           if(minCrewSize==null)minCrewSize=0;
-           if(maxCrewSize==null)maxCrewSize=0;
-            crewSizeIsNull = false;
-            returnList.addAll(shipService.findByCrewSize(minCrewSize,maxCrewSize));
+                returnList = shipService.queryNamePlanet(name, planet, shipType, after, before, isUsed, minSpeed, maxSpeed, minCrewSize, maxCrewSize,
+                minRating, maxRating);
+
+        if(after!=null||before!=null){
+            if(after!=null){
+
+                returnList = returnList.stream().filter(x -> x.getProdDate().getTime()>=after).collect(Collectors.toList());
+            }
+            if(before!=null){
+
+                returnList = returnList.stream().filter(x -> x.getProdDate().getTime()<=before).collect(Collectors.toList());
+            }
         }
 
-        if(minSpeed!=null||maxSpeed!=null){
-            if(minSpeed==null)minSpeed=0.0;
-            if(maxSpeed==null)maxSpeed=0.0;
-            maxSpeedIsNull = false;
-            returnList.addAll(shipService.findBySpeed(minSpeed,maxSpeed));
+        final ShipOrder orderF = order;
+        returnList.sort(new Comparator<Ship>() {
+            int returnResult;
+            @Override
+            public int compare(Ship o1, Ship o2) {
+                switch(orderF){
+                    case ID:
+                        if(o1.getId()>o2.getId()){
+                            returnResult = 1;
+                        }else if(o1.getId()<o2.getId()){
+                            returnResult = -1;
+                        }else {
+                            returnResult = 0;
+                        }
+                        break;
+                    case SPEED:
+                        if(o1.getSpeed()>o2.getSpeed()){
+                            returnResult = 1;
+                        }else if(o1.getSpeed()<o2.getSpeed()){
+                            returnResult = -1;
+                        }else {
+                            returnResult = 0;
+                        }
+                        break;
+                    case DATE:
+                        if(o1.getProdDate().getTime()>o2.getProdDate().getTime()){
+                            returnResult = 1;
+                        }else if(o1.getProdDate().getTime()<o2.getProdDate().getTime()){
+                            returnResult = -1;
+                        }else {
+                            returnResult = 0;
+                        }
+                        break;
+                    case RATING:
+                        if(o1.getRating()>o2.getRating()){
+                            returnResult = 1;
+                        }else if(o1.getRating()<o2.getRating()){
+                            returnResult = -1;
+                        }else{
+                            returnResult = 0;
+                        }
+                        break;
+
+                }
+
+                return returnResult;
+            }
+        });
+
+        List<Ship> pageList = new ArrayList<>();
+        int pageSumm = returnList.size()/pageSize; // количество страниц
+        int summStr = returnList.size(); //количество записей
+        int startStrToPage = pageSize * pageNumber - pageSize; // первая запись на странице
+        int endStrToPage = pageSize * pageNumber; // последняя запись на странице
+        if(returnList.size()%summStr>0)pageSumm++;
+        if(startStrToPage>returnList.size())startStrToPage=0;
+        if(endStrToPage>returnList.size())endStrToPage=returnList.size();
+        for(int i = startStrToPage;i<endStrToPage;i++){
+            pageList.add(returnList.get(i));
         }
 
-        if(minRating!=null||maxRating!=null){
-            if(minRating==null)minRating=0.0;
-            if(maxRating==null)maxRating=0.0;
-            ratingIsNull = false;
-            returnList.addAll(shipService.findByRating(minRating,maxRating));
-        }
-
-        if(shipType!=null){
-            shipTypeIsNull = false;
-            returnList.addAll(shipService.findByShipType(shipType));
-        }
-
-        if(isUsed!=null){
-            isUsedIsNull = false;
-            returnList.addAll(shipService.findByIsUsed(isUsed));
-        }
-
-        if(nameIsNull&&planetIsNull&&prodYearIsNull&&crewSizeIsNull&&maxSpeedIsNull&&ratingIsNull&&shipTypeIsNull&&isUsedIsNull){
-            returnList = shipListPagingService.findAll();
-        }
-
-
-
-        //pageable.
-
-        //returnList = shipListPagingService.findAll();
-        logger.debug(returnList.toString());
         response.setStatus(HttpServletResponse.SC_OK);
-        return returnList;
+        return pageList;
     }
 
+
+
+
+
+
+
+
     @RequestMapping(value = "/rest/ships/count",method = RequestMethod.GET)
-    public Integer getShipsCount(String name, String planet, ShipType shipType,Long after,Long before, Boolean isUsed, Double minSpeed,
-                                    Double maxSpeed, Integer minCrewSize, Integer maxCrewSize, Double minRating, Double maxRating){
+    public Integer getShipsCount(String name, String planet, ShipType shipType, Long after, Long before, Boolean isUsed, Double minSpeed,
+                                 Double maxSpeed, Integer minCrewSize, Integer maxCrewSize, Double minRating, Double maxRating, ShipOrder order,
+                                 Integer pageNumber, Integer pageSize, HttpServletResponse response){
+
         List<Ship> returnList = new ArrayList<>();
-        returnList = shipListPagingService.findAll();
-        logger.debug(returnList.toString());
+
+        if(order==null)order=ShipOrder.ID;
+        if(pageNumber==null)pageNumber=0;
+        pageNumber++;
+        if(pageSize==null)pageSize=3;
+
+
+
+        returnList = shipService.queryNamePlanet(name, planet, shipType, after, before, isUsed, minSpeed, maxSpeed, minCrewSize, maxCrewSize,
+                minRating, maxRating);
+
+        if(after!=null||before!=null){
+            if(after!=null){
+
+                returnList = returnList.stream().filter(x -> x.getProdDate().getTime()>=after).collect(Collectors.toList());
+            }
+            if(before!=null){
+
+                returnList = returnList.stream().filter(x -> x.getProdDate().getTime()<=before).collect(Collectors.toList());
+            }
+        }
+
+//        final ShipOrder orderF = order;
+//        returnList.sort(new Comparator<Ship>() {
+//            int returnResult;
+//            @Override
+//            public int compare(Ship o1, Ship o2) {
+//                switch(orderF){
+//                    case ID:
+//                        if(o1.getId()>o2.getId()){
+//                            returnResult = 1;
+//                        }else if(o1.getId()<o2.getId()){
+//                            returnResult = -1;
+//                        }else {
+//                            returnResult = 0;
+//                        }
+//                        break;
+//                    case SPEED:
+//                        if(o1.getSpeed()>o2.getSpeed()){
+//                            returnResult = 1;
+//                        }else if(o1.getSpeed()<o2.getSpeed()){
+//                            returnResult = -1;
+//                        }else {
+//                            returnResult = 0;
+//                        }
+//                        break;
+//                    case DATE:
+//                        if(o1.getProdDate().getTime()>o2.getProdDate().getTime()){
+//                            returnResult = 1;
+//                        }else if(o1.getProdDate().getTime()<o2.getProdDate().getTime()){
+//                            returnResult = -1;
+//                        }else {
+//                            returnResult = 0;
+//                        }
+//                        break;
+//                    case RATING:
+//                        if(o1.getRating()>o2.getRating()){
+//                            returnResult = 1;
+//                        }else if(o1.getRating()<o2.getRating()){
+//                            returnResult = -1;
+//                        }else{
+//                            returnResult = 0;
+//                        }
+//                        break;
+//
+//                }
+//
+//                return returnResult;
+//            }
+//        });
+
+//        List<Ship> pageList = new ArrayList<>();
+//        int pageSumm = returnList.size()/pageSize; // количество страниц
+//        int summStr = returnList.size(); //количество записей
+//        int startStrToPage = pageSize * pageNumber - pageSize; // первая запись на странице
+//        int endStrToPage = pageSize * pageNumber; // последняя запись на странице
+//        if(returnList.size()%summStr>0)pageSumm++;
+//        if(startStrToPage>returnList.size())startStrToPage=0;
+//        if(endStrToPage>returnList.size())endStrToPage=returnList.size();
+//        for(int i = startStrToPage;i<endStrToPage;i++){
+//            pageList.add(returnList.get(i));
+//        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
         return returnList.size();
     }
 
@@ -244,7 +426,7 @@ public class RController {
 
         Long LID = Long.parseLong(id);
 
-        if(LID==null||LID%1L!=0){
+        if(!internalUtils.isInteger(id)||LID==0){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }
@@ -255,16 +437,16 @@ public class RController {
         }
 
         if(ship.getName()!=null){
-            if(ship.getName().length()>50){
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            if(ship.getName().length()>50||ship.getName().equals("")){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return null;
             }
             Iship.setName(ship.getName());
         }
 
         if(ship.getPlanet()!=null){
-            if(ship.getPlanet().length()>50){
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            if(ship.getPlanet().length()>50||ship.getPlanet().equals("")){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return null;
             }
             Iship.setPlanet(ship.getPlanet());

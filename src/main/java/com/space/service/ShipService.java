@@ -2,6 +2,8 @@ package com.space.service;
 
 import com.space.model.Ship;
 import com.space.model.ShipType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import java.util.Date;
 import java.util.List;
@@ -18,4 +20,10 @@ public interface ShipService {
     List<Ship> findByRating(Double min,Double max);
     List<Ship> findByShipType(ShipType shipType);
     List<Ship> findByIsUsed(Boolean isUsed);
+    List<Ship> findAll();
+    List<Ship> queryNamePlanet(String name, String planet, ShipType shipType, Long after, Long before, Boolean isUsed,
+                               Double minSpeed, Double maxSpeed, Integer minCrewSize, Integer maxCrewSize, Double minRating,
+                               Double maxRating);
+    Page<Ship> findAll(Integer pageNumber, Integer pageSize, Sort order);
+
 }

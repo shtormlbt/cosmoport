@@ -2,14 +2,17 @@ package com.space.repository;
 
 import com.space.model.Ship;
 import com.space.model.ShipType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface ShipRepo extends JpaRepository<Ship, Long> {
+public interface ShipRepo extends JpaRepository<Ship, Long>, JpaSpecificationExecutor<Ship> {
     Ship findShipsById(Long id);
     List<Ship> findByNameContainingIgnoreCase(String name);
     List<Ship> findByPlanetContainingIgnoreCase(String planet);
@@ -19,4 +22,6 @@ public interface ShipRepo extends JpaRepository<Ship, Long> {
     List<Ship> findByRatingBetween(Double min, Double max);
     List<Ship> findByShipType(ShipType shipType);
     List<Ship> findByIsUsed(Boolean isUsed);
+    Page<Ship> findAll(Pageable pageable);
+
 }

@@ -2,9 +2,6 @@ package com.space.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.space.controller.RController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +21,6 @@ import java.util.List;
 @EnableWebMvc
 @ComponentScan("com.space.controller")
 public class WebConfig implements WebMvcConfigurer {
-
-    private static final Logger logger = LoggerFactory.getLogger(RController.class);
 
 
     @Bean
