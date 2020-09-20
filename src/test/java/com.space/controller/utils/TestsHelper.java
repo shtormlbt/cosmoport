@@ -1,6 +1,6 @@
 package com.space.controller.utils;
 
-import com.space.controller.ShipOrder;
+import com.space.util.ShipOrder;
 import com.space.model.ShipType;
 
 import java.text.ParseException;
