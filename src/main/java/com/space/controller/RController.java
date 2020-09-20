@@ -5,7 +5,6 @@ import com.space.model.ShipType;
 import com.space.service.Impl.ShipListPagingServiceImpl;
 import com.space.service.ShipService;
 import com.space.util.InternalUtils;
-import com.space.controller.utils.ShipOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
